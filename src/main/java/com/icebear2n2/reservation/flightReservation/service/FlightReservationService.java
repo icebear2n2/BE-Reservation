@@ -30,6 +30,12 @@ public class FlightReservationService {
             User user = userRepository.findById(reservationRequest.getUserId()).orElseThrow(() -> new EntityNotFoundException("User not found with id: " + reservationRequest.getUserId()));
             Flight flight = flightRepository.findById(reservationRequest.getFlightId()).orElseThrow(() -> new EntityNotFoundException("Flight not found with id: " + reservationRequest.getFlightId()));
             Seat seat = seatRepository.findBySeatNumber(reservationRequest.getSeatNumber());
+
+            // 좌석이 이미 예약되어 있는지 확인
+            if (seat.isReserved()) {
+                throw new RuntimeException("Seat " + seat.getSeatNumber() + " is already reserved.");
+            }
+
             seat.setReserved(true);
 
             FlightReservation reservation = reservationRequest.toEntity(user, flight, seat);
