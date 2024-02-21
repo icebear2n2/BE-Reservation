@@ -26,4 +26,16 @@ public class Seat {
     private Flight flight;
 
     private boolean reserved;
+
+    public void setSeatNumber(String seatNumber) {
+        this.seatNumber = seatNumber;
+    }
+
+    public void setSeatClass(String seatClass) {
+        this.seatClass = seatClass;
+    }
+
+    public void setReserved(boolean reserved) {
+        this.reserved = reserved;
+    }
 }

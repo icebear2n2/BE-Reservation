@@ -62,22 +62,22 @@ public class FlightService {
                     .orElseThrow(() -> new EntityNotFoundException("Flight not found with id: " + flightId));
 
             // 업데이트
-            if (Objects.nonNull(flightRequest.getDeparture())) {
+            if (flightRequest.getDeparture() != null) {
                 flight.setDeparture(flightRequest.getDeparture());
             }
-            if (Objects.nonNull(flightRequest.getDestination())) {
+            if (flightRequest.getDestination() != null) {
                 flight.setDestination(flightRequest.getDestination());
             }
-            if (Objects.nonNull(flightRequest.getDepartureDate())) {
+            if (flightRequest.getDepartureDate() != null) {
                 flight.setDepartureDate(flightRequest.getDepartureDate());
             }
-            if (Objects.nonNull(flightRequest.getDepartureTime())) {
+            if (flightRequest.getDepartureTime() != null) {
                 flight.setDepartureTime(flightRequest.getDepartureTime());
             }
-            if (Objects.nonNull(flightRequest.getArrivalDate())) {
+            if (flightRequest.getArrivalDate() != null) {
                 flight.setArrivalDate(flightRequest.getArrivalDate());
             }
-            if (Objects.nonNull(flightRequest.getArrivalTime())) {
+            if (flightRequest.getArrivalTime() != null) {
                 flight.setArrivalTime(flightRequest.getArrivalTime());
             }
             if (flightRequest.getSeatCapacity() > 0) {
@@ -95,6 +95,7 @@ public class FlightService {
             throw new RuntimeException("Failed to update flight: " + ex.getMessage());
         }
     }
+
 
     // 항공편 삭제
     public void deleteFlight(Long flightId) {
