@@ -2,7 +2,6 @@ package com.icebear2n2.reservation.flight.controller;
 
 import com.icebear2n2.reservation.domain.request.FlightRequest;
 import com.icebear2n2.reservation.domain.response.CreateFlightResponse;
-import com.icebear2n2.reservation.domain.response.FlightResponse;
 import com.icebear2n2.reservation.flight.service.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/flights")
@@ -28,6 +29,35 @@ public class FlightController {
     @GetMapping("/{flightId}")
     public ResponseEntity<CreateFlightResponse> getFlightById(@PathVariable Long flightId) {
         CreateFlightResponse response = flightService.getFlightById(flightId);
+        return ResponseEntity.ok(response);
+    }
+
+    // 출발 빠른 시간 순으로 항공편 조회
+    @GetMapping("/fastest")
+    public ResponseEntity<Page<CreateFlightResponse>> getFlightsByFastestTime(@RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<CreateFlightResponse> response = flightService.getFlightsByFastestTime(pageRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    // 출발 느린 시간 순으로 항공편 조회
+    @GetMapping("/slowest")
+    public ResponseEntity<Page<CreateFlightResponse>> getFlightsBySlowestTime(@RequestParam(defaultValue = "0") int page,
+                                                                              @RequestParam(defaultValue = "10") int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<CreateFlightResponse> response = flightService.getFlightsBySlowestTime(pageRequest);
+        return ResponseEntity.ok(response);
+    }
+
+    // 날짜 별로 항공편 조회
+    @GetMapping("/by-date")
+    public ResponseEntity<Page<CreateFlightResponse>> getFlightsByDate(@RequestParam("date") LocalDate date,
+                                                                       @RequestParam(defaultValue = "0") int page,
+                                                                       @RequestParam(defaultValue = "10") int size
+    ) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<CreateFlightResponse> response = flightService.getFlightsByDate(date, pageRequest);
         return ResponseEntity.ok(response);
     }
 

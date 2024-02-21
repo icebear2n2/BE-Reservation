@@ -6,16 +6,15 @@ import com.icebear2n2.reservation.domain.repository.FlightRepository;
 import com.icebear2n2.reservation.domain.repository.SeatRepository;
 import com.icebear2n2.reservation.domain.request.FlightRequest;
 import com.icebear2n2.reservation.domain.response.CreateFlightResponse;
-import com.icebear2n2.reservation.domain.response.FlightResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +85,39 @@ public class FlightService {
 
             ex.printStackTrace();
             throw new RuntimeException("Failed to get flight: " + ex.getMessage());
+        }
+    }
+
+    // 출발 빠른 시간 순으로 항공편 조회
+    public Page<CreateFlightResponse> getFlightsByFastestTime(PageRequest pageRequest) {
+        try {
+            Page<Flight> flights = flightRepository.findAllByOrderByDepartureTimeAsc(pageRequest);
+            return flights.map(CreateFlightResponse::new);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Failed to get flights by fastest time: " + ex.getMessage());
+        }
+    }
+
+    // 출발 느린 시간 순으로 항공편 조회
+    public Page<CreateFlightResponse> getFlightsBySlowestTime(PageRequest pageRequest) {
+        try {
+            Page<Flight> flights = flightRepository.findAllByOrderByDepartureTimeDesc(pageRequest);
+            return flights.map(CreateFlightResponse::new);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Failed to get flights by slowest time: " + ex.getMessage());
+        }
+    }
+
+    // 날짜 별로 항공편 조회
+    public Page<CreateFlightResponse> getFlightsByDate(LocalDate date, PageRequest pageRequest) {
+        try {
+            Page<Flight> flights = flightRepository.findByDepartureDate(date, pageRequest);
+            return flights.map(CreateFlightResponse::new);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new RuntimeException("Failed to get flights by date: " + ex.getMessage());
         }
     }
 
