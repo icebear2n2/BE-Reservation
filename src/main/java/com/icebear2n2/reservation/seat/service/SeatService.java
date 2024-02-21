@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 public class SeatService {
     private final SeatRepository seatRepository;
 
+    // TODO: 2/21/24 Flight 서비스 내에서 좌석을 자동으로 생성하는 로직이 있는데,
+    //  여기서도 좌석 추가 메서드를 작성해놓을 필요가 있을까..
     // 좌석 생성
     public SeatResponse createSeat(SeatRequest seatRequest) {
         try {

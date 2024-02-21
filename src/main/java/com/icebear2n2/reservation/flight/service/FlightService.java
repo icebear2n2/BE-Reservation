@@ -1,7 +1,9 @@
 package com.icebear2n2.reservation.flight.service;
 
 import com.icebear2n2.reservation.domain.entity.Flight;
+import com.icebear2n2.reservation.domain.entity.Seat;
 import com.icebear2n2.reservation.domain.repository.FlightRepository;
+import com.icebear2n2.reservation.domain.repository.SeatRepository;
 import com.icebear2n2.reservation.domain.request.FlightRequest;
 import com.icebear2n2.reservation.domain.response.FlightResponse;
 import jakarta.persistence.EntityNotFoundException;
@@ -10,17 +12,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
 public class FlightService {
     private final FlightRepository flightRepository;
-
+    private final SeatRepository seatRepository;
     // 항공편 생성
     public FlightResponse createFlight(FlightRequest flightRequest) {
         try {
             Flight flight = flightRequest.toEntity();
+
+            // 좌석 생성 및 연결
+            List<Seat> seats = generateSeats(flightRequest.getSeatCapacity(), flight);
+            flight.setSeats(seats);
+
             Flight savedFlight = flightRepository.save(flight);
             return new FlightResponse(savedFlight);
         } catch (Exception ex) {
@@ -28,6 +37,21 @@ public class FlightService {
             ex.printStackTrace();
             throw new RuntimeException("Failed to create flight: " + ex.getMessage());
         }
+    }
+
+    // 좌석 생성 및 항공편에 연결
+    private List<Seat> generateSeats(int seatCapacity, Flight flight) {
+        List<Seat> seats = new ArrayList<>();
+        for (int i = 1; i <= seatCapacity; i++) {
+            Seat seat = Seat.builder()
+                    .seatNumber("Seat-" + i)
+                    .seatClass("Economy") // 여기서는 기본값으로 Economy 로 설정
+                    .flight(flight)
+                    .reserved(false)
+                    .build();
+            seats.add(seat);
+        }
+        return seatRepository.saveAll(seats);
     }
 
     // 항공편 조회

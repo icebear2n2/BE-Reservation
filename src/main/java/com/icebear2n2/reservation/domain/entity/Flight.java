@@ -73,4 +73,8 @@ public class Flight {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
+    }
 }
