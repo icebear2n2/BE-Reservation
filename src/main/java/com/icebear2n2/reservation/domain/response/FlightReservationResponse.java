@@ -16,22 +16,23 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FlightReservationResponse {
-    private Long flightReservationId;
+    private Long reservationId;
     private UserResponse user;
     private FlightResponse flight;
-    private List<SeatResponse> seats;
+    private SeatResponse seat;
     private PaymentStatus paymentStatus;
 
     public FlightReservationResponse(FlightReservation reservation) {
-        this.flightReservationId = reservation.getFlightReservationId();
+        this.reservationId = reservation.getReservationId();
         this.user = new UserResponse(reservation.getUser());
         this.flight = new FlightResponse(reservation.getFlight());
+        this.seat = new SeatResponse(reservation.getSeat());
         this.paymentStatus = reservation.getPaymentStatus();
     }
 
-    public static List<FlightReservationResponse> fromReservationList(List<FlightReservation> reservations) {
-        return reservations.stream()
-                .map(FlightReservationResponse::new)
-                .collect(Collectors.toList());
-    }
+//    public static List<FlightReservationResponse> fromReservationList(List<FlightReservation> reservations) {
+//        return reservations.stream()
+//                .map(FlightReservationResponse::new)
+//                .collect(Collectors.toList());
+//    }
 }

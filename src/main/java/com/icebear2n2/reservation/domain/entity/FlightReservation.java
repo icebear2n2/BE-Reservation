@@ -17,7 +17,7 @@ import java.util.List;
 public class FlightReservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long flightReservationId;
+    private Long reservationId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -26,6 +26,10 @@ public class FlightReservation {
     @ManyToOne
     @JoinColumn(name = "flight_id")
     private Flight flight;
+
+    @ManyToOne
+    @JoinColumn(name = "seat_id")
+    private Seat seat;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;

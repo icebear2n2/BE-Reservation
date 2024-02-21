@@ -31,4 +31,11 @@ public class SeatResponse {
                 .map(SeatResponse::new)
                 .collect(Collectors.toList());
     }
+
+    public static List<SeatResponse> fromReservedSeatList(List<Seat> seats) {
+        return seats.stream()
+                .filter(Seat::isReserved) // 예약된 좌석만 필터링
+                .map(SeatResponse::new)
+                .collect(Collectors.toList());
+    }
 }

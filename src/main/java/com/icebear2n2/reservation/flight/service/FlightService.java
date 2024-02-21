@@ -5,6 +5,7 @@ import com.icebear2n2.reservation.domain.entity.Seat;
 import com.icebear2n2.reservation.domain.repository.FlightRepository;
 import com.icebear2n2.reservation.domain.repository.SeatRepository;
 import com.icebear2n2.reservation.domain.request.FlightRequest;
+import com.icebear2n2.reservation.domain.response.CreateFlightResponse;
 import com.icebear2n2.reservation.domain.response.FlightResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class FlightService {
     private final SeatRepository seatRepository;
 
     // 항공편 생성
-    public FlightResponse createFlight(FlightRequest flightRequest) {
+    public CreateFlightResponse createFlight(FlightRequest flightRequest) {
         try {
             Flight flight = flightRequest.toEntity();
 
@@ -37,7 +38,7 @@ public class FlightService {
             savedFlight.setSeats(seats);
 
             // 저장된 항공편 반환
-            return new FlightResponse(savedFlight);
+            return new CreateFlightResponse(savedFlight);
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new RuntimeException("Failed to create flight: " + ex.getMessage());
@@ -76,11 +77,11 @@ public class FlightService {
 
 
     // 항공편 조회
-    public FlightResponse getFlightById(Long flightId) {
+    public CreateFlightResponse getFlightById(Long flightId) {
         try {
             Flight flight = flightRepository.findById(flightId)
                     .orElseThrow(() -> new EntityNotFoundException("Flight not found with id: " + flightId));
-            return new FlightResponse(flight);
+            return new CreateFlightResponse(flight);
         } catch (Exception ex) {
 
             ex.printStackTrace();
@@ -89,10 +90,10 @@ public class FlightService {
     }
 
     // 모든 항공편 조회
-    public Page<FlightResponse> getAllFlights(PageRequest pageRequest) {
+    public Page<CreateFlightResponse> getAllFlights(PageRequest pageRequest) {
         try {
             Page<Flight> all = flightRepository.findAll(pageRequest);
-            return all.map(FlightResponse::new);
+            return all.map(CreateFlightResponse::new);
         } catch (Exception ex) {
 
             ex.printStackTrace();
@@ -101,7 +102,7 @@ public class FlightService {
     }
 
     // 항공편 업데이트
-    public FlightResponse updateFlight(Long flightId, FlightRequest flightRequest) {
+    public CreateFlightResponse updateFlight(Long flightId, FlightRequest flightRequest) {
         try {
             Flight flight = flightRepository.findById(flightId)
                     .orElseThrow(() -> new EntityNotFoundException("Flight not found with id: " + flightId));
@@ -133,7 +134,7 @@ public class FlightService {
             }
 
             Flight updateFlight = flightRepository.save(flight);
-            return new FlightResponse(updateFlight);
+            return new CreateFlightResponse(updateFlight);
         } catch (Exception ex) {
 
             ex.printStackTrace();

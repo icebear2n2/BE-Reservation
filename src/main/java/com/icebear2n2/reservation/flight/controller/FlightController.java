@@ -1,6 +1,7 @@
 package com.icebear2n2.reservation.flight.controller;
 
 import com.icebear2n2.reservation.domain.request.FlightRequest;
+import com.icebear2n2.reservation.domain.response.CreateFlightResponse;
 import com.icebear2n2.reservation.domain.response.FlightResponse;
 import com.icebear2n2.reservation.flight.service.FlightService;
 import lombok.RequiredArgsConstructor;
@@ -18,39 +19,39 @@ public class FlightController {
 
     // 항공편 생성
     @PostMapping
-    public ResponseEntity<FlightResponse> createFlight(@RequestBody FlightRequest flightRequest) {
-        FlightResponse response = flightService.createFlight(flightRequest);
+    public ResponseEntity<CreateFlightResponse> createFlight(@RequestBody FlightRequest flightRequest) {
+        CreateFlightResponse response = flightService.createFlight(flightRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 항공편 조회
     @GetMapping("/{flightId}")
-    public ResponseEntity<FlightResponse> getFlightById(@PathVariable Long flightId) {
-        FlightResponse response = flightService.getFlightById(flightId);
+    public ResponseEntity<CreateFlightResponse> getFlightById(@PathVariable Long flightId) {
+        CreateFlightResponse response = flightService.getFlightById(flightId);
         return ResponseEntity.ok(response);
     }
 
     // 모든 항공편 조회
     @GetMapping
-    public ResponseEntity<Page<FlightResponse>> getAllFlights(@RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<Page<CreateFlightResponse>> getAllFlights(@RequestParam(defaultValue = "0") int page,
                                                               @RequestParam(defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<FlightResponse> response = flightService.getAllFlights(pageRequest);
+        Page<CreateFlightResponse> response = flightService.getAllFlights(pageRequest);
         return ResponseEntity.ok(response);
     }
 
     // 항공편 업데이트
     @PutMapping("/{flightId}")
-    public ResponseEntity<FlightResponse> updateFlight(@PathVariable Long flightId,
+    public ResponseEntity<CreateFlightResponse> updateFlight(@PathVariable Long flightId,
                                                        @RequestBody FlightRequest flightRequest) {
-        FlightResponse response = flightService.updateFlight(flightId, flightRequest);
+        CreateFlightResponse response = flightService.updateFlight(flightId, flightRequest);
         return ResponseEntity.ok(response);
     }
 
     // 항공편 삭제
     @DeleteMapping("/{flightId}")
-    public ResponseEntity<Void> deleteFlight(@PathVariable Long flightId) {
+    public ResponseEntity<String> deleteFlight(@PathVariable Long flightId) {
         flightService.deleteFlight(flightId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.ok("Flight with ID " + flightId + " deleted successfully.");
     }
 }
