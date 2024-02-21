@@ -36,10 +36,10 @@ public class Flight {
     private int seatCapacity;
     private double price;
 
-    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Seat> seats;
 
-    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<FlightReservation> reservations;
 
     public void setDeparture(String departure) {

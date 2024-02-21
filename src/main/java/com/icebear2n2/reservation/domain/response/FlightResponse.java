@@ -42,6 +42,6 @@ public class FlightResponse {
 
         // 좌석과 예약 정보는 각각의 response 클래스를 이용하여 변환
         this.seats = SeatResponse.fromSeatList(flight.getSeats());
-        this.reservations = FlightReservationResponse.fromReservationList(flight.getReservations());
+        this.reservations = flight.getReservations() != null ? FlightReservationResponse.fromReservationList(flight.getReservations()) : null;
     }
 }

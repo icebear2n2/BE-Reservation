@@ -27,9 +27,6 @@ public class FlightReservation {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<Seat> seats;
-
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 }

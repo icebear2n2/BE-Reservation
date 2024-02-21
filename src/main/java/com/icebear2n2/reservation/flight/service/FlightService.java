@@ -21,19 +21,24 @@ import java.util.Objects;
 public class FlightService {
     private final FlightRepository flightRepository;
     private final SeatRepository seatRepository;
+
     // 항공편 생성
     public FlightResponse createFlight(FlightRequest flightRequest) {
         try {
             Flight flight = flightRequest.toEntity();
 
-            // 좌석 생성 및 연결
-            List<Seat> seats = generateSeats(flightRequest.getSeatCapacity(), flight);
-            flight.setSeats(seats);
-
+            // 항공편을 먼저 저장
             Flight savedFlight = flightRepository.save(flight);
+
+            // 저장된 항공편의 ID를 사용하여 좌석 생성 및 연결
+            List<Seat> seats = generateSeats(flightRequest.getSeatCapacity(), savedFlight);
+
+            // 저장된 좌석을 항공편에 설정
+            savedFlight.setSeats(seats);
+
+            // 저장된 항공편 반환
             return new FlightResponse(savedFlight);
         } catch (Exception ex) {
-
             ex.printStackTrace();
             throw new RuntimeException("Failed to create flight: " + ex.getMessage());
         }
@@ -42,10 +47,24 @@ public class FlightService {
     // 좌석 생성 및 항공편에 연결
     private List<Seat> generateSeats(int seatCapacity, Flight flight) {
         List<Seat> seats = new ArrayList<>();
+        char[] seatClasses = {'B', 'E'}; // 비즈니스 클래스와 이코노미 클래스
+        int businessCounter = 0; // 비즈니스 클래스 좌석 카운터
         for (int i = 1; i <= seatCapacity; i++) {
+            // 좌석 번호 생성
+            StringBuilder seatNumberBuilder = new StringBuilder();
+            char seatClass;
+            if (i <= 4) {
+                seatClass = seatClasses[0]; // 1부터 4까지는 비즈니스 클래스로 설정
+                businessCounter++;
+            } else {
+                seatClass = seatClasses[1]; // 이후 좌석은 이코노미 클래스로 설정
+            }
+            seatNumberBuilder.append(seatClass); // 좌석 클래스 추가
+            seatNumberBuilder.append(i <= 4 ? businessCounter : (i - 4)); // 좌석 번호 추가
+
             Seat seat = Seat.builder()
-                    .seatNumber("Seat-" + i)
-                    .seatClass("Economy") // 여기서는 기본값으로 Economy 로 설정
+                    .seatNumber(seatNumberBuilder.toString())
+                    .seatClass(seatClass == 'B' ? "Business" : "Economy") // 좌석 클래스 설정
                     .flight(flight)
                     .reserved(false)
                     .build();
@@ -53,6 +72,8 @@ public class FlightService {
         }
         return seatRepository.saveAll(seats);
     }
+
+
 
     // 항공편 조회
     public FlightResponse getFlightById(Long flightId) {

@@ -26,7 +26,6 @@ public class FlightReservationResponse {
         this.flightReservationId = reservation.getFlightReservationId();
         this.user = new UserResponse(reservation.getUser());
         this.flight = new FlightResponse(reservation.getFlight());
-        this.seats = SeatResponse.fromSeatList(reservation.getSeats());
         this.paymentStatus = reservation.getPaymentStatus();
     }
 
